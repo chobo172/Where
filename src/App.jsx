@@ -103,9 +103,9 @@ function App() {
         </div>
       ) : (
         <div className="mb-4">
-          <p className="mb-1">✅ 로그인됨: <strong>{loggedInUser}</strong></p>
+          <p className="mb-1">✅ Logged in: <strong>{loggedInUser}</strong></p>
           <button onClick={handleLogout} className="text-sm text-red-500 underline">
-            로그아웃
+            Logout
           </button>
         </div>
       )}
