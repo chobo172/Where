@@ -29,7 +29,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">✅現在位置表示</h1>
+      <h1 className="text-2xl font-bold mb-4 text-left">✅現在位置表示</h1>
       <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg">
         <table className="min-w-[900px] table-auto border border-black">
           <thead>
