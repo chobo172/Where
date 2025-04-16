@@ -25,13 +25,13 @@ function App() {
   const [selectedName, setSelectedName] = useState("");
   const [password, setPassword] = useState("");
 
-  // 🔁 로그인 유지: 새로고침 시 localStorage에서 복원
+  // 로그인 유지
   useEffect(() => {
     const saved = localStorage.getItem("loggedInUser");
     if (saved) setLoggedInUser(saved);
   }, []);
 
-  // 🔁 실시간 Firebase 데이터 불러오기
+  // 실시간 Firebase 데이터 불러오기
   useEffect(() => {
     const dbRef = ref(database, "positions");
     const unsubscribe = onValue(dbRef, (snapshot) => {
@@ -43,7 +43,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // ✅ 로그인 처리
+  // 로그인
   const handleLogin = () => {
     if (passwords[selectedName] === password) {
       setLoggedInUser(selectedName);
@@ -53,13 +53,15 @@ function App() {
     }
   };
 
-  // ✅ 로그아웃
+  // 로그아웃
   const handleLogout = () => {
     setLoggedInUser(null);
+    setSelectedName("");    // 이름 선택 초기화
+    setPassword("");        // 비밀번호 입력 초기화
     localStorage.removeItem("loggedInUser");
   };
 
-  // ✅ 위치 선택
+  // 위치 선택
   const handleClick = (name, location) => {
     const updated = { ...selected, [name]: location };
     set(ref(database, "positions"), updated);
@@ -71,7 +73,7 @@ function App() {
 
       {!loggedInUser ? (
         <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-          <div className="flex gap-2 mb-2 items-center">
+          <div className="flex gap-2 mb-2 items-center flex-wrap">
             <label>Name</label>
             <select
               value={selectedName}
@@ -90,7 +92,7 @@ function App() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border px-2 py-1 w-16"
+              className="border px-2 py-1 w-20"
               maxLength={4}
             />
             <button
