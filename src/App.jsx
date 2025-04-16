@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { ref, onValue, set } from "firebase/database";
+import { database } from "./firebase";
 import "./index.css";
 
 const names = ["KWON", "加藤", "佐藤", "Tiago", "野久", "熊内", "筒井", "西川", "吉田"];
-const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"];
+const locations = [
+  "在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL",
+  "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"
+];
 
 function App() {
   const [selected, setSelected] = useState({});
 
-  // ✅ 페이지 로드 시 저장된 선택 불러오기
   useEffect(() => {
-    const saved = localStorage.getItem("lab-check");
-    if (saved) {
-      setSelected(JSON.parse(saved));
-    }
+    const stateRef = ref(database, "selected");
+    onValue(stateRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setSelected(data);
+      }
+    });
   }, []);
 
-  // ✅ 선택 상태가 바뀔 때마다 localStorage에 저장
-  useEffect(() => {
-    localStorage.setItem("lab-check", JSON.stringify(selected));
-  }, [selected]);
-
   const handleClick = (name, location) => {
-    setSelected((prev) => ({
-      ...prev,
+    const newState = {
+      ...selected,
       [name]: location
-    }));
+    };
+    set(ref(database, "selected"), newState);
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">
-        📍 현재 위치 표시 테이블
+        📍 현재 위치 표시 테이블 (실시간 공유)
       </h1>
-
       <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg">
         <table className="min-w-[700px] table-auto border border-black text-sm sm:text-base">
           <thead>
