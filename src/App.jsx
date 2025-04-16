@@ -9,7 +9,7 @@ const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR
 function App() {
   const [selected, setSelected] = useState({});
 
-  // ✅ Firebase에서 실시간 데이터 받아오기
+  // ✅ 실시간 데이터 불러오기
   useEffect(() => {
     const dbRef = ref(database, "positions");
     const unsubscribe = onValue(dbRef, (snapshot) => {
@@ -18,20 +18,20 @@ function App() {
         setSelected(data);
       }
     });
-    return () => unsubscribe(); // cleanup
+    return () => unsubscribe();
   }, []);
 
-  // ✅ 위치 선택 시 Firebase에 저장
+  // ✅ 클릭 시 Firebase에 저장
   const handleClick = (name, location) => {
     const updated = { ...selected, [name]: location };
     set(ref(database, "positions"), updated);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-4">📍 현재 위치 표시 테이블</h1>
-      <div className="overflow-x-auto shadow-xl rounded-lg">
-        <table className="table-auto border border-black">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">📍 현재 위치 표시 테이블</h1>
+      <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg">
+        <table className="min-w-[900px] table-auto border border-black">
           <thead>
             <tr>
               <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">
