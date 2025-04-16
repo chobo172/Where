@@ -78,7 +78,7 @@ function App() {
               onChange={(e) => setSelectedName(e.target.value)}
               className="border px-2 py-1"
             >
-              <option value="">선택</option>
+              <option value="">Select</option>
               {names.map((name) => (
                 <option key={name} value={name}>
                   {name}
