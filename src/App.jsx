@@ -49,7 +49,7 @@ function App() {
       setLoggedInUser(selectedName);
       localStorage.setItem("loggedInUser", selectedName);
     } else {
-      alert("비밀번호가 틀렸습니다.");
+      alert("password is incorrect");
     }
   };
 
@@ -67,12 +67,12 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">📍 현재 위치 표시 테이블</h1>
+      <h1 className="text-2xl font-bold mb-4 text-left">✅現在位置表示</h1>
 
       {!loggedInUser ? (
         <div className="bg-white shadow-md rounded-lg p-4 mb-6">
           <div className="flex gap-2 mb-2 items-center">
-            <label>이름</label>
+            <label>Name</label>
             <select
               value={selectedName}
               onChange={(e) => setSelectedName(e.target.value)}
@@ -85,7 +85,7 @@ function App() {
                 </option>
               ))}
             </select>
-            <label>비밀번호</label>
+            <label>Password</label>
             <input
               type="password"
               value={password}
@@ -97,7 +97,7 @@ function App() {
               onClick={handleLogin}
               className="bg-blue-500 text-white px-3 py-1 rounded"
             >
-              로그인
+              Login
             </button>
           </div>
         </div>
@@ -115,7 +115,7 @@ function App() {
           <thead>
             <tr>
               <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">
-                이름
+                名前
               </th>
               {locations.map((loc) => (
                 <th
