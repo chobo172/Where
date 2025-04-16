@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 
 const names = ["KWON", "加藤", "佐藤", "Tiago", "野久", "熊内", "筒井", "西川", "吉田"];
@@ -6,6 +6,19 @@ const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR
 
 function App() {
   const [selected, setSelected] = useState({});
+
+  // ✅ 페이지 로드 시 저장된 선택 불러오기
+  useEffect(() => {
+    const saved = localStorage.getItem("lab-check");
+    if (saved) {
+      setSelected(JSON.parse(saved));
+    }
+  }, []);
+
+  // ✅ 선택 상태가 바뀔 때마다 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem("lab-check", JSON.stringify(selected));
+  }, [selected]);
 
   const handleClick = (name, location) => {
     setSelected((prev) => ({
