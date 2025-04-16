@@ -6,7 +6,6 @@ import { ref, set, onValue } from "firebase/database";
 const names = ["KWON", "加藤", "佐藤", "Tiago", "野久", "熊内", "筒井", "西川", "吉田"];
 const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"];
 
-// 이름별 비밀번호 (자유롭게 수정 가능)
 const passwords = {
   KWON: "2223",
   加藤: "1813",
@@ -21,6 +20,7 @@ const passwords = {
 
 function App() {
   const [selected, setSelected] = useState({});
+  const [remarks, setRemarks] = useState({});
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [selectedName, setSelectedName] = useState("");
   const [password, setPassword] = useState("");
@@ -31,14 +31,22 @@ function App() {
     if (saved) setLoggedInUser(saved);
   }, []);
 
-  // 실시간 Firebase 데이터 불러오기
+  // 위치 상태 불러오기
   useEffect(() => {
     const dbRef = ref(database, "positions");
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
-        setSelected(data);
-      }
+      if (data) setSelected(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 비고 상태 불러오기
+  useEffect(() => {
+    const dbRef = ref(database, "remarks");
+    const unsubscribe = onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setRemarks(data);
     });
     return () => unsubscribe();
   }, []);
@@ -56,8 +64,8 @@ function App() {
   // 로그아웃
   const handleLogout = () => {
     setLoggedInUser(null);
-    setSelectedName("");    // 이름 선택 초기화
-    setPassword("");        // 비밀번호 입력 초기화
+    setSelectedName("");
+    setPassword("");
     localStorage.removeItem("loggedInUser");
   };
 
@@ -65,6 +73,13 @@ function App() {
   const handleClick = (name, location) => {
     const updated = { ...selected, [name]: location };
     set(ref(database, "positions"), updated);
+  };
+
+  // 비고 변경
+  const handleRemarkChange = (name, value) => {
+    const updated = { ...remarks, [name]: value };
+    setRemarks(updated);
+    set(ref(database, "remarks"), updated);
   };
 
   return (
@@ -82,9 +97,7 @@ function App() {
             >
               <option value="">Select</option>
               {names.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
+                <option key={name} value={name}>{name}</option>
               ))}
             </select>
             <label>Password</label>
@@ -116,17 +129,11 @@ function App() {
         <table className="min-w-[900px] table-auto border border-black">
           <thead>
             <tr>
-              <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">
-                名前
-              </th>
+              <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">名前</th>
               {locations.map((loc) => (
-                <th
-                  key={loc}
-                  className="border border-black bg-gray-100 px-4 py-2 text-sm text-center whitespace-nowrap"
-                >
-                  {loc}
-                </th>
+                <th key={loc} className="border border-black bg-gray-100 px-4 py-2 text-sm text-center whitespace-nowrap">{loc}</th>
               ))}
+              <th className="border border-black bg-gray-200 px-4 py-2 text-sm text-center whitespace-nowrap">備考</th>
             </tr>
           </thead>
           <tbody>
@@ -134,24 +141,31 @@ function App() {
               const isMine = name === loggedInUser;
               return (
                 <tr key={name}>
-                  <td className="border border-black px-4 py-2 font-semibold bg-white sticky left-0 z-10">
-                    {name}
-                  </td>
+                  <td className="border border-black px-4 py-2 font-semibold bg-white sticky left-0 z-10">{name}</td>
                   {locations.map((loc) => (
                     <td
                       key={loc}
                       className={`border border-black px-4 py-2 text-center transition-all duration-200 ${
-                        isMine
-                          ? "cursor-pointer hover:bg-gray-200"
-                          : "opacity-40 cursor-not-allowed"
-                      } ${
-                        selected[name] === loc ? "bg-black text-white font-bold" : ""
-                      }`}
+                        isMine ? "cursor-pointer hover:bg-gray-200" : "opacity-40 cursor-not-allowed"
+                      } ${selected[name] === loc ? "bg-black text-white font-bold" : ""}`}
                       onClick={() => isMine && handleClick(name, loc)}
                     >
                       {selected[name] === loc ? "●" : ""}
                     </td>
                   ))}
+                  <td className="border border-black px-2 py-2 text-center">
+                    {isMine ? (
+                      <input
+                        type="text"
+                        value={remarks[name] || ""}
+                        onChange={(e) => handleRemarkChange(name, e.target.value)}
+                        className="border px-2 py-1 text-sm w-32"
+                        placeholder="入力..."
+                      />
+                    ) : (
+                      <span className="text-sm">{remarks[name] || ""}</span>
+                    )}
+                  </td>
                 </tr>
               );
             })}
