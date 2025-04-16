@@ -29,13 +29,13 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">📍 현재 위치 표시 테이블</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">✅現在位置表示</h1>
       <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg">
         <table className="min-w-[900px] table-auto border border-black">
           <thead>
             <tr>
               <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">
-                이름
+                名前
               </th>
               {locations.map((loc) => (
                 <th
