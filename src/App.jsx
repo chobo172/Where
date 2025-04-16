@@ -67,7 +67,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-4 text-left">✅現在位置表示</h1>
+      <h1 className="text-2xl font-bold mb-4 text-left">✅第2修研室現在位置表示</h1>
 
       {!loggedInUser ? (
         <div className="bg-white shadow-md rounded-lg p-4 mb-6">
