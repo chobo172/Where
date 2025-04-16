@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { ref, set, onValue } from "firebase/database";
+import { ref, onValue, set } from "firebase/database";
 import { database } from "./firebase";
 
 const names = ["KWON", "加藤", "佐藤", "Tiago", "野久", "熊内", "筒井", "西川", "吉田"];
-const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"];
+const locations = [
+  "在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL",
+  "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"
+];
 
-function App() {
+export default function App() {
   const [selected, setSelected] = useState({});
 
-  // ✅ Firebase 실시간 데이터베이스에서 데이터 가져오기
   useEffect(() => {
-    const dbRef = ref(database, "positions");
-    onValue(dbRef, (snapshot) => {
+    const stateRef = ref(database, "positions");
+    onValue(stateRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setSelected(data);
@@ -20,29 +22,28 @@ function App() {
     });
   }, []);
 
-  // ✅ 위치 선택 시 Firebase에 저장
   const handleClick = (name, location) => {
     const updated = {
       ...selected,
-      [name]: location
+      [name]: location,
     };
     set(ref(database, "positions"), updated);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-4">📍 현재 위치 표시 테이블</h1>
-      <div className="overflow-x-auto shadow-xl rounded-lg">
-        <table className="table-auto border border-black">
+    <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
+      <h1 className="text-2xl font-bold mb-4 text-center">📍 현재 위치 표시 테이블</h1>
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-max table-auto border border-black shadow-xl">
           <thead>
             <tr>
-              <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white">
+              <th className="border border-black bg-gray-200 px-3 py-2 sticky left-0 bg-white z-10">
                 이름
               </th>
               {locations.map((loc) => (
                 <th
                   key={loc}
-                  className="border border-black bg-gray-100 px-4 py-2 text-sm text-center whitespace-nowrap"
+                  className="border border-black bg-gray-100 px-3 py-2 whitespace-nowrap text-sm text-center"
                 >
                   {loc}
                 </th>
@@ -52,13 +53,13 @@ function App() {
           <tbody>
             {names.map((name) => (
               <tr key={name}>
-                <td className="border border-black px-4 py-2 font-semibold bg-white sticky left-0 bg-opacity-90 backdrop-blur">
+                <td className="border border-black px-3 py-2 bg-white font-semibold sticky left-0 bg-opacity-90 backdrop-blur z-10">
                   {name}
                 </td>
                 {locations.map((loc) => (
                   <td
                     key={loc}
-                    className={`border border-black px-4 py-2 text-center cursor-pointer transition-all duration-200 ${
+                    className={`border border-black px-3 py-2 text-center cursor-pointer transition-all duration-200 ${
                       selected[name] === loc
                         ? "bg-black text-white font-bold"
                         : "hover:bg-gray-200"
@@ -76,5 +77,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
