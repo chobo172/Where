@@ -90,7 +90,7 @@ function App() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border px-2 py-1"
+              className="border px-2 py-1 w-16"
               maxLength={4}
             />
             <button
