@@ -4,7 +4,7 @@ import { database } from "./firebase";
 import { ref, set, onValue } from "firebase/database";
 
 const names = ["KWON", "熊内", "岡本", "米村", "内園", "山本", "高谷", "込山", "岡田(壮)"];
-const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "総研棟", "第5修研室", "第7修研室", "帰省", "帰宅"];
+const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "C2-608", "総研棟", "第5修研室", "第7修研室", "帰宅"];
 
 const passwords = {
   KWON: "1112",
@@ -15,7 +15,7 @@ const passwords = {
   山本: "3226",
   高谷: "3246",
   込山: "3252",
-  岡田: "3274"
+  岡田(そ): "3274"
 };
 
 function App() {
