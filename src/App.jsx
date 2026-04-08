@@ -3,7 +3,7 @@ import "./index.css";
 import { database } from "./firebase";
 import { ref, set, onValue } from "firebase/database";
 
-const names = ["KWON", "熊内", "岡本", "米村", "内園", "山本", "高谷", "込山", "岡田(そ)"];
+const names = ["KWON", "熊内", "岡本", "米村", "内園", "山本", "高谷", "込山", "岡田そ"];
 const locations = ["在室", "授業", "出張", "学内", "MTG", "IRES²", "NCR/VBL", "C2-602", "C2-608", "総研棟", "第5修研室", "第7修研室", "帰宅"];
 
 const passwords = {
@@ -15,7 +15,7 @@ const passwords = {
   山本: "0000",
   高谷: "0000",
   込山: "0000",
-  岡田(そ): "0000"
+  岡田そ: "0000"
 };
 
 function App() {
