@@ -16,18 +16,6 @@ const passwords = {
   高谷: "3246",
   込山: "3232",
   岡田そ: "1825"
-];
-
-const passwords = {
-  KWON: "2223",
-  加藤: "1813",
-  佐藤: "3237",
-  Tiago: "3283",
-  野久: "3251",
-  熊内: "3226",
-  筒井: "3246",
-  西川: "3252",
-  吉田: "3274"
 };
 
 function App() {
@@ -43,25 +31,23 @@ function App() {
     if (saved) setLoggedInUser(saved);
   }, []);
 
-  // 위치 데이터 불러오기
+  // 위치 상태 불러오기
   useEffect(() => {
     const dbRef = ref(database, "positions");
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       if (data) setSelected(data);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // 비고 데이터 불러오기
+  // 비고 상태 불러오기
   useEffect(() => {
     const dbRef = ref(database, "remarks");
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       if (data) setRemarks(data);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -70,7 +56,6 @@ function App() {
     if (passwords[selectedName] === password) {
       setLoggedInUser(selectedName);
       localStorage.setItem("loggedInUser", selectedName);
-      setPassword("");
     } else {
       alert("password is incorrect");
     }
@@ -90,7 +75,7 @@ function App() {
     set(ref(database, "positions"), updated);
   };
 
-  // 비고 입력
+  // 비고 변경
   const handleRemarkChange = (name, value) => {
     const updated = { ...remarks, [name]: value };
     setRemarks(updated);
@@ -98,41 +83,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 p-6">
-      {/* 제목 */}
-      <h1 className="text-2xl font-bold mb-3 text-center">
-        🔬第2修研室現在位置🚀
-      </h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
+      <h1 className="text-2xl font-bold mb-4 text-left">🔬第2修研室現在位置🚀</h1>
 
-      {/* 아이콘형 외부 링크 */}
-      <div className="flex gap-4 mb-6 justify-center text-lg font-semibold flex-wrap">
-        <a
-          href="https://int.ee.tut.ac.jp/bio/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-green-600 hover:scale-110 transition duration-200"
-        >
-          🧬 BIO
-        </a>
-
-        <span className="text-gray-400">|</span>
-
-        <a
-          href="https://www.eiiris.tut.ac.jp/evers/Web/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-blue-600 hover:scale-110 transition duration-200"
-        >
-          🌐 EVERS
-        </a>
-      </div>
-
-      {/* 로그인 */}
       {!loggedInUser ? (
         <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-          <div className="flex gap-2 items-center flex-wrap">
+          <div className="flex gap-2 mb-2 items-center flex-wrap">
             <label>Name</label>
-
             <select
               value={selectedName}
               onChange={(e) => setSelectedName(e.target.value)}
@@ -140,14 +97,10 @@ function App() {
             >
               <option value="">Select</option>
               {names.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
+                <option key={name} value={name}>{name}</option>
               ))}
             </select>
-
             <label>Password</label>
-
             <input
               type="password"
               value={password}
@@ -155,99 +108,62 @@ function App() {
               className="border px-2 py-1 w-20"
               maxLength={4}
             />
-
             <button
               onClick={handleLogin}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+              className="bg-blue-500 text-white px-3 py-1 rounded"
             >
               Login
             </button>
           </div>
         </div>
       ) : (
-        <div className="mb-4 text-center">
-          <p className="mb-1">
-            ✅ Logged in: <strong>{loggedInUser}</strong>
-          </p>
-
-          <button
-            onClick={handleLogout}
-            className="text-sm text-red-500 underline"
-          >
+        <div className="mb-4">
+          <p className="mb-1">✅ Logged in: <strong>{loggedInUser}</strong></p>
+          <button onClick={handleLogout} className="text-sm text-red-500 underline">
             Logout
           </button>
         </div>
       )}
 
-      {/* 표 */}
-      <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg bg-white">
-        <table className="min-w-[1100px] table-auto border border-black">
+      <div className="w-full max-w-full overflow-x-auto shadow-xl rounded-lg">
+        <table className="min-w-[900px] table-auto border border-black">
           <thead>
             <tr>
-              <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">
-                名前
-              </th>
-
+              <th className="border border-black bg-gray-200 px-4 py-2 sticky left-0 bg-white z-10">名前</th>
               {locations.map((loc) => (
-                <th
-                  key={loc}
-                  className="border border-black bg-gray-100 px-4 py-2 text-sm whitespace-nowrap"
-                >
-                  {loc}
-                </th>
+                <th key={loc} className="border border-black bg-gray-100 px-4 py-2 text-sm text-center whitespace-nowrap">{loc}</th>
               ))}
-
-              <th className="border border-black bg-gray-200 px-4 py-2 whitespace-nowrap">
-                備考
-              </th>
+              <th className="border border-black bg-gray-200 px-4 py-2 text-sm text-center whitespace-nowrap">備考</th>
             </tr>
           </thead>
-
           <tbody>
             {names.map((name) => {
               const isMine = name === loggedInUser;
-
               return (
                 <tr key={name}>
-                  <td className="border border-black px-4 py-2 font-semibold sticky left-0 bg-white z-10">
-                    {name}
-                  </td>
-
+                  <td className="border border-black px-4 py-2 font-semibold bg-white sticky left-0 z-10">{name}</td>
                   {locations.map((loc) => (
                     <td
                       key={loc}
-                      onClick={() => isMine && handleClick(name, loc)}
                       className={`border border-black px-4 py-2 text-center transition-all duration-200 ${
-                        isMine
-                          ? "cursor-pointer hover:bg-gray-200"
-                          : "opacity-40 cursor-not-allowed"
-                      } ${
-                        selected[name] === loc
-                          ? "bg-black text-white font-bold"
-                          : ""
-                      }`}
+                        isMine ? "cursor-pointer hover:bg-gray-200" : "opacity-40 cursor-not-allowed"
+                      } ${selected[name] === loc ? "bg-black text-white font-bold" : ""}`}
+                      onClick={() => isMine && handleClick(name, loc)}
                     >
                       {selected[name] === loc ? "●" : ""}
                     </td>
                   ))}
-
-                  {/* 비고 */}
                   <td className="border border-black px-2 py-2 text-center">
                     {isMine ? (
                       <input
                         type="text"
                         value={remarks[name] || ""}
-                        onChange={(e) =>
-                          handleRemarkChange(name, e.target.value)
-                        }
+                        onChange={(e) => handleRemarkChange(name, e.target.value)}
                         className="border px-2 py-1 text-sm w-32"
                         placeholder="入力..."
-                        maxLength={10}
                       />
                     ) : (
-                      <span className="text-sm">
-                        {remarks[name] || ""}
-                      </span>
+                      <span className="text-sm">{remarks[name] || ""}</span>
                     )}
                   </td>
                 </tr>
